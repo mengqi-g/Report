@@ -1,0 +1,124 @@
+---
+title: "STATS 4A Project"
+author: "Mengqi Gao"
+date: "4/2/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+Global_temp <- readr::read_csv('NASA GLOBAL LAND-OCEAN TEMPERATURE INDEX.csv', col_names = TRUE)
+Global_Temp <- ts(Global_temp[2], start = 1880, end = 2021)
+plot(Global_Temp)
+
+```
+
+```{r}
+acf(Global_Temp,142)
+```
+
+```{r}
+library(fBasics)
+library(timeSeries)
+library(timeDate)
+library(fUnitRoots)
+adfTest(Global_Temp)
+```
+
+```{r}
+Global_Temp.dif <- diff(Global_Temp)
+plot(Global_Temp.dif)
+```
+
+```{r}
+adfTest(Global_Temp.dif)
+```
+
+```{r}
+par(mfrow = c(1,2))
+acf(Global_Temp.dif, lag.max = 142)
+pacf(Global_Temp.dif, lag.max = 142)
+```
+
+```{r}
+model.1 <- arima(Global_Temp, order = c(1,1,1))
+model.1
+```
+
+```{r}
+model.2 <- arima(Global_Temp, order = c(1,1,2))
+model.2
+```
+
+```{r}
+model.3 <- arima(Global_Temp, order = c(1,1,3))
+model.3
+```
+
+```{r}
+model.4 <- arima(Global_Temp, order = c(1,1,4))
+model.4
+```
+
+```{r}
+model.5 <- arima(Global_Temp, order = c(2,1,1))
+model.5
+```
+
+```{r}
+model.6 <- arima(Global_Temp, order = c(2,1,2))
+model.6
+```
+
+```{r}
+model.7 <- arima(Global_Temp, order = c(2,1,3))
+model.7
+```
+
+```{r}
+model.8 <- arima(Global_Temp, order = c(2,1,4))
+model.8
+```
+
+```{r}
+model.9 <- arima(Global_Temp, order = c(3,1,1))
+model.9
+```
+
+```{r}
+model.10 <- arima(Global_Temp, order = c(3,1,2))
+model.10
+```
+
+```{r}
+model.11 <- arima(Global_Temp, order = c(3,1,3))
+model.11
+```
+
+```{r}
+model.12 <- arima(Global_Temp, order = c(3,1,4))
+model.12
+```
+
+
+```{r}
+fitmodel <- arima(Global_Temp, order = c(2,1,4))
+fitmodel
+```
+
+```{r}
+tsdiag(fitmodel)
+```
+
+
+```{r}
+Box.test(fitmodel$residual, type = "Ljung-Box")
+```
+
+```{r}
+library(forecast)
+Global_Temp.fc <- forecast(fitmodel, h = 3)
+Global_Temp.fc
+plot(Global_Temp.fc)
+```
